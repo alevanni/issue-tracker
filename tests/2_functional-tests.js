@@ -119,12 +119,12 @@ suite("Functional Tests", function() {
   });
 
   suite("PUT /api/issues/{project} => text", function() {
-    test("No body", function(done) {
+    test("No id", function(done) {
       chai
         .request(server)
         .put("/api/issues/test")
         .send({
-          id: putId
+          
         })
         .end(function(err, res) {
           assert.equal(res.status, 200);
@@ -156,7 +156,39 @@ suite("Functional Tests", function() {
           done();
         });
     });
-
+  test("No field to update", function(done) {
+      chai
+        .request(server)
+        .put("/api/issues/test")
+        .send({
+          _id: putId,
+        })
+        .end(function(err, res) {
+          assert.equal(res.status, 200);
+          assert.equal(res.body._id, putId);
+          assert.equal(res.body.error,'no update field(s) sent');
+		  
+          
+          done();
+        });
+    });
+	test("Invalid Id", function(done) {
+      chai
+        .request(server)
+        .put("/api/issues/test")
+        .send({
+          _id: ObjectId("5e30c70758537e0c96198afd"),
+          issue_text : "Hi there"
+        })
+        .end(function(err, res) {
+          assert.equal(res.status, 200);
+          assert.equal(res.body._id, ObjectId("5e30c70758537e0c96198afd"));
+          assert.equal(res.body.error,'could not update');
+		  
+          
+          done();
+        });
+    });
     test("Multiple fields to update", function(done) {
       chai
         .request(server)
@@ -386,5 +418,19 @@ suite("Functional Tests", function() {
             });
         });
     });
+       test("Invalid _id", function(done) {
+      var myID = "5e30c70758537e0c96198afd";
+          //console.log(myID);
+          chai
+            .request(server)
+            .delete("/api/issues/test")
+            .send({ _id: ObjectId(myID) })
+            .end(function(err, res) {
+             assert.equal(res.status, 200);
+              assert.equal(res.body.error, "could not delete");
+              assert.equal(res.body._id, ObjectId(myID));
+              done();
+            });
+        });
   });
 });

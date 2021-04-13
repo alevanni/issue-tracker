@@ -139,7 +139,8 @@ module.exports = function(app) {
                     //res.json(JSON.stringify({ message: "could not update " + req.body._id }));
                   //non va bene
                   else {
-                    if (data != JSON.stringify({})) {
+                    //console.log(data)
+                    if (data.lastErrorObject.updatedExisting == true ) {
                       //i found something
                       res.json({  result: 'successfully updated', '_id': req.body._id });
                      // res.json(JSON.stringify(({ message: "successfully updated " //+ req.body._id   })));
@@ -160,25 +161,33 @@ module.exports = function(app) {
           .delete(function(req, res) {
             var project = req.params.project;
             var id = req.body._id;
-            if (req.body._id == undefined || req.body._id == null) {
+            if (req.body._id == undefined || req.body._id == "") {
               //console.log("no id");
               res.send({ error: 'missing _id' })
               //res.json(JSON.stringify({ message: "_id error" }));
             } else {
-              myAwesomeDB
-                .collection(project)
-                .deleteOne({ _id: ObjectId(id) }, function(err, data) {
+               myAwesomeDB.collection(project)
+                .deleteOne({_id: ObjectId(id)}, function(err, data) {
                   if (err)  {
+                    
+                    console.log("error could not delete" + req.body._id)
                     res.send({ error: 'could not delete', '_id': req.body._id })
                   }//res.json(JSON.stringify({ message: "successfully deleted"}));
                   else {
-                    res.send({ result: 'successfully deleted', '_id': req.body._id });
+                    console.log(data.deletedCount);
+                    if (data.deletedCount == 1) {
+                       res.send({ result: 'successfully deleted', '_id': req.body._id });
+                    }
+                    else {
+                      res.send({ error: 'could not delete', '_id': req.body._id })
+                    }
                     //res.json(
                       //JSON.stringify({ message: "successfully deleted"})
                    // );
                   }
                   //console.log(res.body)
                 });
+               
             }
           });
 

@@ -62,7 +62,7 @@ module.exports = function(app) {
           } else {
             //console.log("missing");
            // res.send({ message: "missing required fields" });
-            res.send("missing inputs");
+            res.send({ error: 'required field(s) missing' });
           }
         });
         app
@@ -93,6 +93,9 @@ module.exports = function(app) {
             // funziona, manca la checkbox!!
             var project = req.params.project;
             var updates = {};
+            if (req.body._id == "" || req.body._id == undefined){
+              res.send({ error: 'missing _id' })
+            }
             if (
               req.body.issue_title != "" &&
               req.body.issue_title != undefined
@@ -132,16 +135,16 @@ module.exports = function(app) {
                 { returnNewDocument: true, strict: false },
                 function(err, data) {
                   if (err)
-                    res.send("could not update " + req.body._id)
+                    res.send({ error: 'could not update', '_id': req.body._id })
                     //res.json(JSON.stringify({ message: "could not update " + req.body._id }));
                   //non va bene
                   else {
                     if (data != JSON.stringify({})) {
-                      //i found somoething
-                      res.send("successfully updated");
+                      //i found something
+                      res.json({  result: 'successfully updated', '_id': req.body._id });
                      // res.json(JSON.stringify(({ message: "successfully updated " //+ req.body._id   })));
                     } else { //i did not find it
-                      res.json(JSON.stringify({ message: "could not update " + req.body._id }));
+                      res.send({ error: 'could not update', '_id': req.body._id });
                     }
                   }
                 }
@@ -149,7 +152,7 @@ module.exports = function(app) {
               //ritorna il nuovo dato, levala, non serve
             } else {
               //res.json(JSON.stringify({ message: "no updated field sent" }));
-              res.send("no updated field sent");
+              res.send({ error: 'no update field(s) sent', '_id': req.body._id });
             }
           
           })
@@ -159,15 +162,17 @@ module.exports = function(app) {
             var id = req.body._id;
             if (req.body._id == undefined || req.body._id == null) {
               //console.log("no id");
-              res.send("_id error")
+              res.send({ error: 'missing _id' })
               //res.json(JSON.stringify({ message: "_id error" }));
             } else {
               myAwesomeDB
                 .collection(project)
                 .deleteOne({ _id: ObjectId(id) }, function(err, data) {
-                  if (err)  console.error(err)//res.json(JSON.stringify({ message: "successfully deleted"}));
+                  if (err)  {
+                    res.send({ error: 'could not delete', '_id': req.body._id })
+                  }//res.json(JSON.stringify({ message: "successfully deleted"}));
                   else {
-                    res.send("deleted "+ id);
+                    res.send({ result: 'successfully deleted', '_id': req.body._id });
                     //res.json(
                       //JSON.stringify({ message: "successfully deleted"})
                    // );

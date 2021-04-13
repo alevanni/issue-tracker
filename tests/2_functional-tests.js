@@ -112,7 +112,7 @@ suite("Functional Tests", function() {
         })
         .end(function(err, res) {
           assert.equal(res.status, 200);
-          assert.equal(res.text, "missing inputs");
+          assert.equal(res.body.error, "required field(s) missing");
           done();
         });
     });
@@ -129,7 +129,7 @@ suite("Functional Tests", function() {
         .end(function(err, res) {
           assert.equal(res.status, 200);
           // assert.equal( res.body, JSON.stringify({ message: "no updated field sent" }) );
-          assert.equal(res.text, "no updated field sent");
+          assert.equal(res.body.error, "missing _id");
           done();
         });
     });
@@ -144,7 +144,9 @@ suite("Functional Tests", function() {
         })
         .end(function(err, res) {
           assert.equal(res.status, 200);
-          assert.equal(res.text, "successfully updated");
+          assert.equal(res.body.result, "successfully updated");
+          assert.equal(res.body._id, putId);
+        
           //    assert.equal(
           //      res.body,
           //      JSON.stringify({
@@ -167,7 +169,8 @@ suite("Functional Tests", function() {
         })
         .end(function(err, res) {
           assert.equal(res.status, 200);
-          assert.equal(res.text, "successfully updated");
+          assert.equal(res.body.result, "successfully updated");
+          assert.equal(res.body._id, putId);
           // assert.equal(
           //   res.body,
           //   JSON.stringify({
@@ -348,7 +351,7 @@ suite("Functional Tests", function() {
         .send({})
         .end(function(err, res) {
           assert.equal(res.status, 200);
-          assert.equal(res.text, "_id error");
+          assert.equal(res.body.error, "missing _id");
           //assert.equal(res.body, JSON.stringify({ message: "_id error" }));
           done();
         });
@@ -373,7 +376,8 @@ suite("Functional Tests", function() {
             .send({ _id: ObjectId(myID) })
             .end(function(err, res) {
              assert.equal(res.status, 200);
-              assert.equal(res.text, "deleted " + myID);
+              assert.equal(res.body.result, "successfully deleted");
+             assert.equal(res.body._id, res.body._id);
               //    assert.equal(
               //      res.body,
               //      JSON.stringify({ message: "successfully deleted " + myID })

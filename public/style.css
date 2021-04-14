@@ -2,10 +2,17 @@
   margin: 0px;
   padding: 0px;
 }
+:root {
+  --main-bg-color: #ECFEFD;
+  --main-text-color: #730474;
+}
 
 body {
   padding: 10px;
+  background-color: var(--main-bg-color);
+  color: var(--main-text-color);
 }
+
 
 .issue {
   margin: 20px;

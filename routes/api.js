@@ -145,7 +145,8 @@ module.exports = function(app) {
                       res.json({  result: 'successfully updated', '_id': req.body._id });
                      // res.json(JSON.stringify(({ message: "successfully updated " //+ req.body._id   })));
                     } else { //i did not find it
-                      res.send({ error: 'could not update', '_id': req.body._id });
+                      console.log("i'm here")
+                      res.json({ error: 'could not update', '_id': req.body._id });
                     }
                   }
                 }

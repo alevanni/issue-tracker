@@ -1,0 +1,989 @@
+{
+	"info": {
+		"_postman_id": "0412e8b2-3e6f-4ead-87d7-99b29a86fd7d",
+		"name": "Issue Tracker",
+		"description": "These are the 11 functional test cases for the project:\nhttps://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/issue-tracker\nThe project is for the QA section and it is a mock project board to keep track of the issue of a project. We exercise our ability to write automated test cases, on an a fake issue tracking board, that is very meta :)\n\nThe source code is here: https://glitch.com/edit/#!/issuetracker-fcccertif\n\nWe test the \"apitest\" project board, the string \"apitest\" is stored in the environment variable {{project}}\n\nThe ids necessary for the PUT and DELETE test cases are generated in the POST test cases. \nThe related variables are called put_id and delete_id",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List of project issues w/ no filter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Is Array and every object has all the fields\", function () {\r",
+							"    var my_array = pm.response.json();\r",
+							"    pm.expect(my_array).to.be.an(\"array\");\r",
+							"    for(var i=0; i < my_array.length; i++) {\r",
+							"    pm.expect(my_array[i]).to.have.property(\"_id\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"issue_title\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"issue_text\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"created_by\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"assigned_to\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"status_text\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"created_on\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"updated_on\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"open\");\r",
+							"\r",
+							"}\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://issuetracker-fcccertif.glitch.me/api/issues/{{project}}",
+					"protocol": "https",
+					"host": [
+						"issuetracker-fcccertif",
+						"glitch",
+						"me"
+					],
+					"path": [
+						"api",
+						"issues",
+						"{{project}}"
+					]
+				},
+				"description": "Gets an array of issues related to a specific project"
+			},
+			"response": []
+		},
+		{
+			"name": "List of project issues with filters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Is Array and every object has all the fields\", function () {\r",
+							"    var my_array = pm.response.json();\r",
+							"    pm.expect(my_array).to.be.an(\"array\");\r",
+							"    for(var i=0; i < my_array.length; i++) {\r",
+							"    pm.expect(my_array[i]).to.have.property(\"_id\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"issue_title\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"issue_text\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"created_by\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"assigned_to\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"status_text\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"created_on\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"updated_on\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"open\");\r",
+							"\r",
+							"}\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Is Array and every object has the correct filtered fields\", function () {\r",
+							"    var my_array = pm.response.json();\r",
+							"    pm.expect(my_array).to.be.an(\"array\");\r",
+							"    for(var i=0; i < my_array.length; i++) {\r",
+							"        pm.expect(my_array[i].created_by).to.be.eql(pm.variables.get(\"param1\"));\r",
+							"        pm.expect(my_array[i].open).to.be.eql(true);\r",
+							"\r",
+							"}\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://issuetracker-fcccertif.glitch.me/api/issues/{{project}}?created_by={{param1}}&open=true",
+					"protocol": "https",
+					"host": [
+						"issuetracker-fcccertif",
+						"glitch",
+						"me"
+					],
+					"path": [
+						"api",
+						"issues",
+						"{{project}}"
+					],
+					"query": [
+						{
+							"key": "created_by",
+							"value": "{{param1}}"
+						},
+						{
+							"key": "open",
+							"value": "true"
+						}
+					]
+				},
+				"description": "Gets a filtered array of issues related to a specific project\n\n"
+			},
+			"response": []
+		},
+		{
+			"name": "List of project issues with one filter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Is Array and every object has all the fields\", function () {\r",
+							"    var my_array = pm.response.json();\r",
+							"    pm.expect(my_array).to.be.an(\"array\");\r",
+							"    for(var i=0; i < my_array.length; i++) {\r",
+							"    pm.expect(my_array[i]).to.have.property(\"_id\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"issue_title\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"issue_text\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"created_by\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"assigned_to\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"status_text\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"created_on\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"updated_on\");\r",
+							"    pm.expect(my_array[i]).to.have.property(\"open\");\r",
+							"\r",
+							"}\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Is Array and every object has the correct filtered field\", function () {\r",
+							"    var my_array = pm.response.json();\r",
+							"    pm.expect(my_array).to.be.an(\"array\");\r",
+							"    for(var i=0; i < my_array.length; i++) {\r",
+							"        pm.expect(my_array[i].open).to.be.eql(false);\r",
+							"\r",
+							"}\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://issuetracker-fcccertif.glitch.me/api/issues/{{project}}?open=false",
+					"protocol": "https",
+					"host": [
+						"issuetracker-fcccertif",
+						"glitch",
+						"me"
+					],
+					"path": [
+						"api",
+						"issues",
+						"{{project}}"
+					],
+					"query": [
+						{
+							"key": "created_by",
+							"value": "{{param1}}",
+							"disabled": true
+						},
+						{
+							"key": "open",
+							"value": "false"
+						}
+					]
+				},
+				"description": "Gets a filtered array of issues related to a specific project\n\n"
+			},
+			"response": []
+		},
+		{
+			"name": "New Issue with only necessary fields filled in",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Is Json and every object has all the fields\", function () {\r",
+							"    var my_json = pm.response.json();\r",
+							"    pm.expect(my_json).to.be.an(\"object\");\r",
+							"    pm.expect(my_json).to.have.property(\"_id\");\r",
+							"    pm.expect(my_json).to.have.property(\"issue_title\");\r",
+							"    pm.expect(my_json).to.have.property(\"issue_text\");\r",
+							"    pm.expect(my_json).to.have.property(\"created_by\");\r",
+							"    pm.expect(my_json).to.have.property(\"assigned_to\");\r",
+							"    pm.expect(my_json).to.have.property(\"status_text\");\r",
+							"    pm.expect(my_json).to.have.property(\"created_on\");\r",
+							"    pm.expect(my_json).to.have.property(\"updated_on\");\r",
+							"    pm.expect(my_json).to.have.property(\"open\");\r",
+							"\r",
+							"\r",
+							"    pm.globals.set(\"put_id\", my_json._id);\r",
+							"    console.log(pm.globals.get(\"put_id\"))\r",
+							"});\r",
+							"\r",
+							"pm.test(\"My Json has the fields I put in it\", function () {\r",
+							"    var my_json = pm.response.json();\r",
+							"    pm.expect(my_json.issue_title).to.be.eql(\"Title\");\r",
+							"    pm.expect(my_json.created_by).to.be.eql(\"Required fields filled in\");\r",
+							"    pm.expect(my_json.issue_text).to.be.eql(\"text\");\r",
+							"\r",
+							"\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "issue_title",
+							"value": "Title",
+							"type": "text"
+						},
+						{
+							"key": "issue_text",
+							"value": "text",
+							"type": "text"
+						},
+						{
+							"key": "created_by",
+							"value": "Required fields filled in",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://issuetracker-fcccertif.glitch.me/api/issues/{{project}}",
+					"protocol": "https",
+					"host": [
+						"issuetracker-fcccertif",
+						"glitch",
+						"me"
+					],
+					"path": [
+						"api",
+						"issues",
+						"{{project}}"
+					]
+				},
+				"description": "Creates a new issue with minimum information\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "New Issue with every field filled in",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Is Json and every object has all the fields\", function () {\r",
+							"    var my_json = pm.response.json();\r",
+							"    pm.expect(my_json).to.be.an(\"object\");\r",
+							"    pm.expect(my_json).to.have.property(\"_id\");\r",
+							"    pm.expect(my_json).to.have.property(\"issue_title\");\r",
+							"    pm.expect(my_json).to.have.property(\"issue_text\");\r",
+							"    pm.expect(my_json).to.have.property(\"created_by\");\r",
+							"    pm.expect(my_json).to.have.property(\"assigned_to\");\r",
+							"    pm.expect(my_json).to.have.property(\"status_text\");\r",
+							"    pm.expect(my_json).to.have.property(\"created_on\");\r",
+							"    pm.expect(my_json).to.have.property(\"updated_on\");\r",
+							"    pm.expect(my_json).to.have.property(\"open\");\r",
+							"   pm.globals.set(\"delete_id\", my_json._id);\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"My Json has the fields I put in it\", function () {\r",
+							"    var my_json = pm.response.json();\r",
+							"    pm.expect(my_json.issue_title).to.be.eql(\"Title\");\r",
+							"    pm.expect(my_json.created_by).to.be.eql(\"Functional Test - Every field filled in\");\r",
+							"    pm.expect(my_json.issue_text).to.be.eql(\"text\");\r",
+							"    pm.expect(my_json.assigned_to).to.be.eql(\"Chai and Mocha\");\r",
+							"    pm.expect(my_json.status_text).to.be.eql(\"In QA\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "issue_title",
+							"value": "Title",
+							"type": "text"
+						},
+						{
+							"key": "issue_text",
+							"value": "text",
+							"type": "text"
+						},
+						{
+							"key": "created_by",
+							"value": "Functional Test - Every field filled in",
+							"type": "text"
+						},
+						{
+							"key": "assigned_to",
+							"value": "Chai and Mocha",
+							"type": "text"
+						},
+						{
+							"key": "status_text",
+							"value": "In QA",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://issuetracker-fcccertif.glitch.me/api/issues/{{project}}",
+					"protocol": "https",
+					"host": [
+						"issuetracker-fcccertif",
+						"glitch",
+						"me"
+					],
+					"path": [
+						"api",
+						"issues",
+						"{{project}}"
+					]
+				},
+				"description": "Creates a new issue with every piece of information\n"
+			},
+			"response": []
+		},
+		{
+			"name": "New issue with missing input",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body says missing inputs\", function () {\r",
+							"     var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"error\");\r",
+							"    pm.expect(jsonData.error).to.eql(\"required field(s) missing\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://issuetracker-fcccertif.glitch.me/api/issues/{{project}}",
+					"protocol": "https",
+					"host": [
+						"issuetracker-fcccertif",
+						"glitch",
+						"me"
+					],
+					"path": [
+						"api",
+						"issues",
+						"{{project}}"
+					]
+				},
+				"description": "Cannot create an issue because it misses the required fields"
+			},
+			"response": []
+		},
+		{
+			"name": "No fields to update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"my_id = pm.environment.get(\"id\");\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Body says no updated field sent\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"error\");\r",
+							"    pm.expect(jsonData.error).to.eql(\"no update field(s) sent\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "_id",
+							"value": "{{put_id}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://issuetracker-fcccertif.glitch.me/api/issues/{{project}}",
+					"protocol": "https",
+					"host": [
+						"issuetracker-fcccertif",
+						"glitch",
+						"me"
+					],
+					"path": [
+						"api",
+						"issues",
+						"{{project}}"
+					]
+				},
+				"description": "We try to modify an issue but we give no fields to update\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "One field to update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Body says successfully updated\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"successfully updated\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "issue_text",
+							"value": " let's modify 2",
+							"type": "text"
+						},
+						{
+							"key": "_id",
+							"value": "{{put_id}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://issuetracker-fcccertif.glitch.me/api/issues/{{project}}",
+					"protocol": "https",
+					"host": [
+						"issuetracker-fcccertif",
+						"glitch",
+						"me"
+					],
+					"path": [
+						"api",
+						"issues",
+						"{{project}}"
+					]
+				},
+				"description": "We try to modify an issue and we give a field to update\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Multiple fields to update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Body says successfully updated\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"successfully updated\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "issue_text",
+							"value": "let's modify 3",
+							"type": "text"
+						},
+						{
+							"key": "_id",
+							"value": "{{put_id}}",
+							"type": "text"
+						},
+						{
+							"key": "status_text",
+							"value": "let's modify the status",
+							"type": "text"
+						},
+						{
+							"key": "open",
+							"value": "false",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://issuetracker-fcccertif.glitch.me/api/issues/{{project}}",
+					"protocol": "https",
+					"host": [
+						"issuetracker-fcccertif",
+						"glitch",
+						"me"
+					],
+					"path": [
+						"api",
+						"issues",
+						"{{project}}"
+					]
+				},
+				"description": "We try to modify an issue giving more fields to update\n\n"
+			},
+			"response": []
+		},
+		{
+			"name": "No ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"JSON contains the right message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"error\");\r",
+							"    pm.expect(jsonData.error).to.eql(\"missing _id\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "issue_text",
+							"value": "let's modify 3",
+							"type": "text"
+						},
+						{
+							"key": "_id",
+							"value": "{{put_id}}",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "status_text",
+							"value": "let's modify the status",
+							"type": "text"
+						},
+						{
+							"key": "open",
+							"value": "false",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://issuetracker-fcccertif.glitch.me/api/issues/{{project}}",
+					"protocol": "https",
+					"host": [
+						"issuetracker-fcccertif",
+						"glitch",
+						"me"
+					],
+					"path": [
+						"api",
+						"issues",
+						"{{project}}"
+					]
+				},
+				"description": "We try to modify an issue giving more fields to update\n\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"JSON has all the fields\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"error\");\r",
+							"    pm.expect(jsonData.error).to.eql(\"could not update\");\r",
+							"    pm.expect(jsonData).to.have.property(\"_id\");\r",
+							"    pm.expect(jsonData._id).to.eql(pm.collectionVariables.get(\"invalid_id\"));\r",
+							"\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "issue_text",
+							"value": "let's modify 4",
+							"type": "text"
+						},
+						{
+							"key": "_id",
+							"value": "5e30c70758537e0c96198afd",
+							"type": "text"
+						},
+						{
+							"key": "status_text",
+							"value": "let's modify the status",
+							"type": "text"
+						},
+						{
+							"key": "open",
+							"value": "false",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://issuetracker-fcccertif.glitch.me/api/issues/{{project}}",
+					"protocol": "https",
+					"host": [
+						"issuetracker-fcccertif",
+						"glitch",
+						"me"
+					],
+					"path": [
+						"api",
+						"issues",
+						"{{project}}"
+					]
+				},
+				"description": "We try to modify an issue giving more fields to update\n\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete with id",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							";\r",
+							"pm.test(\"Body says deleted id\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"result\");\r",
+							"    pm.expect(jsonData.error).to.eql(\"successfully deleted\");\r",
+							"    \r",
+							"    pm.expect(jsonData._id).to.eql(pm.collectionVariables.get(\"delete_id\"));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "_id",
+							"value": "{{delete_id}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://issuetracker-fcccertif.glitch.me/api/issues/{{project}}",
+					"protocol": "https",
+					"host": [
+						"issuetracker-fcccertif",
+						"glitch",
+						"me"
+					],
+					"path": [
+						"api",
+						"issues",
+						"{{project}}"
+					]
+				},
+				"description": "We delete an issue giving an id\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete with no id",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							";\r",
+							"pm.test(\"Body says deleted id\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"   pm.expect(jsonData).to.have.property(\"error\");\r",
+							"    pm.expect(jsonData.error).to.eql(\"missing _id\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "_id",
+							"value": "{{delete_id}}",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://issuetracker-fcccertif.glitch.me/api/issues/{{project}}",
+					"protocol": "https",
+					"host": [
+						"issuetracker-fcccertif",
+						"glitch",
+						"me"
+					],
+					"path": [
+						"api",
+						"issues",
+						"{{project}}"
+					]
+				},
+				"description": "We delete an issue giving an id\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete with invalid id",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							";\r",
+							"pm.test(\"Body says deleted id\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"error\");\r",
+							"    pm.expect(jsonData.error).to.eql(\"could not delete\");\r",
+							"    pm.expect(jsonData).to.have.property(\"_id\");\r",
+							"    \r",
+							"    pm.expect(jsonData._id).to.eql(pm.collectionVariables.get(\"invalid_id\"));\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "_id",
+							"value": "5e30c70758537e0c96198afd",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://issuetracker-fcccertif.glitch.me/api/issues/{{project}}",
+					"protocol": "https",
+					"host": [
+						"issuetracker-fcccertif",
+						"glitch",
+						"me"
+					],
+					"path": [
+						"api",
+						"issues",
+						"{{project}}"
+					]
+				},
+				"description": "We delete an issue giving an id\n"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "param1",
+			"value": "Functional Manual Test – Every Field Filled In"
+		},
+		{
+			"key": "param2",
+			"value": "true"
+		},
+		{
+			"key": "invalid_id",
+			"value": "5e30c70758537e0c96198afd"
+		}
+	]
+}

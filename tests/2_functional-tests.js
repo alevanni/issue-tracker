@@ -1,3 +1,4 @@
+//momentarily out for updating the style
 /*
  *
  *
@@ -123,9 +124,7 @@ suite("Functional Tests", function() {
       chai
         .request(server)
         .put("/api/issues/test")
-        .send({
-          
-        })
+        .send({})
         .end(function(err, res) {
           assert.equal(res.status, 200);
           // assert.equal( res.body, JSON.stringify({ message: "no updated field sent" }) );
@@ -146,7 +145,7 @@ suite("Functional Tests", function() {
           assert.equal(res.status, 200);
           assert.equal(res.body.result, "successfully updated");
           assert.equal(res.body._id, putId);
-        
+
           //    assert.equal(
           //      res.body,
           //      JSON.stringify({
@@ -156,36 +155,34 @@ suite("Functional Tests", function() {
           done();
         });
     });
-  test("No field to update", function(done) {
+    test("No field to update", function(done) {
       chai
         .request(server)
         .put("/api/issues/test")
         .send({
-          _id: putId,
+          _id: putId
         })
         .end(function(err, res) {
           assert.equal(res.status, 200);
           assert.equal(res.body._id, putId);
-          assert.equal(res.body.error,'no update field(s) sent');
-		  
-          
+          assert.equal(res.body.error, "no update field(s) sent");
+
           done();
         });
     });
-	test("Invalid Id", function(done) {
+    test("Invalid Id", function(done) {
       chai
         .request(server)
         .put("/api/issues/test")
         .send({
           _id: ObjectId("5e30c70758537e0c96198afd"),
-          issue_text : "Hi there"
+          issue_text: "Hi there"
         })
         .end(function(err, res) {
           assert.equal(res.status, 200);
           assert.equal(res.body._id, ObjectId("5e30c70758537e0c96198afd"));
-          assert.equal(res.body.error,'could not update');
-		  
-          
+          assert.equal(res.body.error, "could not update");
+
           done();
         });
     });
@@ -325,10 +322,13 @@ suite("Functional Tests", function() {
         chai
           .request(server)
           .get("/api/issues/test")
-          .query({ created_by: "Functional Test - Every field filled in", open: "true" })
+          .query({
+            created_by: "Functional Test - Every field filled in",
+            open: "true"
+          })
           .end(function(err, res) {
             assert.equal(res.status, 200);
-           assert.isArray(res.body);
+            assert.isArray(res.body);
             assert.isDefined(res.body[0]._id);
             assert.isDefined(res.body[0].issue_title);
             assert.isDefined(res.body[0].issue_text);
@@ -349,24 +349,27 @@ suite("Functional Tests", function() {
             assert.property(res.body[0], "_id");
             res.body.forEach(d => {
               assert.isDefined(d._id);
-                assert.isDefined(d.issue_title);
-                assert.isDefined(d.issue_text);
-                assert.isDefined(d.created_by);
-                assert.isDefined(d.assigned_to);
-                assert.isDefined(d.status_text);
-                assert.isDefined(d.created_on);
-                assert.isDefined(d.updated_on);
-                assert.isDefined(d.open);
-                assert.property(d, "issue_title");
-                assert.property(d, "issue_text");
-                assert.property(d, "created_on");
-                assert.property(d, "updated_on");
-                assert.property(d, "created_by");
-                assert.property(d, "assigned_to");
-                assert.property(d, "open");
-                assert.property(d, "status_text");
-                assert.property(d, "_id");
-              assert.equal(d.created_by, "Functional Test - Every field filled in");
+              assert.isDefined(d.issue_title);
+              assert.isDefined(d.issue_text);
+              assert.isDefined(d.created_by);
+              assert.isDefined(d.assigned_to);
+              assert.isDefined(d.status_text);
+              assert.isDefined(d.created_on);
+              assert.isDefined(d.updated_on);
+              assert.isDefined(d.open);
+              assert.property(d, "issue_title");
+              assert.property(d, "issue_text");
+              assert.property(d, "created_on");
+              assert.property(d, "updated_on");
+              assert.property(d, "created_by");
+              assert.property(d, "assigned_to");
+              assert.property(d, "open");
+              assert.property(d, "status_text");
+              assert.property(d, "_id");
+              assert.equal(
+                d.created_by,
+                "Functional Test - Every field filled in"
+              );
               assert.equal(d.open, true);
             });
             done();
@@ -407,9 +410,9 @@ suite("Functional Tests", function() {
             .delete("/api/issues/test")
             .send({ _id: ObjectId(myID) })
             .end(function(err, res) {
-             assert.equal(res.status, 200);
+              assert.equal(res.status, 200);
               assert.equal(res.body.result, "successfully deleted");
-             assert.equal(res.body._id, res.body._id);
+              assert.equal(res.body._id, res.body._id);
               //    assert.equal(
               //      res.body,
               //      JSON.stringify({ message: "successfully deleted " + myID })
@@ -418,19 +421,19 @@ suite("Functional Tests", function() {
             });
         });
     });
-       test("Invalid _id", function(done) {
+    test("Invalid _id", function(done) {
       var myID = "5e30c70758537e0c96198afd";
-          //console.log(myID);
-          chai
-            .request(server)
-            .delete("/api/issues/test")
-            .send({ _id: ObjectId(myID) })
-            .end(function(err, res) {
-             assert.equal(res.status, 200);
-              assert.equal(res.body.error, "could not delete");
-              assert.equal(res.body._id, ObjectId(myID));
-              done();
-            });
+      //console.log(myID);
+      chai
+        .request(server)
+        .delete("/api/issues/test")
+        .send({ _id: ObjectId(myID) })
+        .end(function(err, res) {
+          assert.equal(res.status, 200);
+          assert.equal(res.body.error, "could not delete");
+          assert.equal(res.body._id, ObjectId(myID));
+          done();
         });
+    });
   });
 });

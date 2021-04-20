@@ -3,8 +3,9 @@
   padding: 0px;
 }
 :root {
-  --open-bg-color: #FB901B;
-  --closed-bg-color: #23DC24;
+  --open-bg-color: #EE116F;
+  --closed-bg-color: #0FD380;
+  --code-bg-color: #84F6C6;
 }
 
 body {
@@ -12,13 +13,34 @@ body {
   color: var(--main-text-color);
   font-family: "Lucida Console", "Courier New", monospace;
 }
+header{
+  text-align: center;
+}
+#userstories{
+   line-height: 150%;
+  }
+code{
+  background-color: var(--code-bg-color);
+}
 input{
   border-radius: 5px;
+  margin: 3px;
 }
 textarea{
   border: 2px solid black;
   border-radius: 5px;
 }
+button{
+  background-color: var(--open-bg-color);
+  border-radius: 5px;
+  padding: 3px;
+    color: white;
+}
+
+h1{
+  color: var(--open-bg-color);
+}
+
 .issue {
   margin: 20px;
   padding: 5px;
@@ -27,7 +49,7 @@ textarea{
   border: 0px solid black;
   border-radius: 10px;
   color: black;
-  
+  color: white;
   box-shadow: 0px 10px 20px 10px #C5C6C8;
 }
 

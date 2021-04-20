@@ -31,7 +31,7 @@ module.exports = function(app) {
         //manca il body parser
         app.route("/api/issues/:project").post(function(req, res) {
           var project = req.params.project;
-          
+
           if (
             req.body.issue_title != null &&
             req.body.issue_text != null &&
@@ -61,8 +61,8 @@ module.exports = function(app) {
             );
           } else {
             //console.log("missing");
-           // res.send({ message: "missing required fields" });
-            res.send({ error: 'required field(s) missing' });
+            // res.send({ message: "missing required fields" });
+            res.send({ error: "required field(s) missing" });
           }
         });
         app
@@ -70,15 +70,15 @@ module.exports = function(app) {
           .get(function(req, res) {
             var project = req.params.project;
             var filter = req.query;
-          //console.log(filter);
+            //console.log(filter);
             if (filter.open == "true") {
               filter.open = true;
             } else if (filter.open == "false") {
               filter.open = false;
             }
-           if (filter._id != undefined){
-             filter._id= ObjectId(filter._id)
-           }
+            if (filter._id != undefined) {
+              filter._id = ObjectId(filter._id);
+            }
             // console.log(filter)
             myAwesomeDB
               .collection(project)
@@ -93,8 +93,10 @@ module.exports = function(app) {
             // funziona, manca la checkbox!!
             var project = req.params.project;
             var updates = {};
-            if (req.body._id == "" || req.body._id == undefined){
-              res.send({ error: 'missing _id' })
+            console.log(req.body._id);
+            if (req.body._id == "" || req.body._id == undefined) {
+              res.send({ error: "missing _id" });
+              return;
             }
             if (
               req.body.issue_title != "" &&
@@ -135,18 +137,25 @@ module.exports = function(app) {
                 { returnNewDocument: true, strict: false },
                 function(err, data) {
                   if (err)
-                    res.send({ error: 'could not update', '_id': req.body._id })
-                    //res.json(JSON.stringify({ message: "could not update " + req.body._id }));
+                    res.send({ error: "could not update", _id: req.body._id });
+                  //res.json(JSON.stringify({ message: "could not update " + req.body._id }));
                   //non va bene
                   else {
                     //console.log(data)
-                    if (data.lastErrorObject.updatedExisting == true ) {
+                    if (data.lastErrorObject.updatedExisting == true) {
                       //i found something
-                      res.json({  result: 'successfully updated', '_id': req.body._id });
-                     // res.json(JSON.stringify(({ message: "successfully updated " //+ req.body._id   })));
-                    } else { //i did not find it
-                      console.log("i'm here")
-                      res.json({ error: 'could not update', '_id': req.body._id });
+                      res.json({
+                        result: "successfully updated",
+                        _id: req.body._id
+                      });
+                      // res.json(JSON.stringify(({ message: "successfully updated " //+ req.body._id   })));
+                    } else {
+                      //i did not find it
+                      console.log("i'm here");
+                      res.json({
+                        error: "could not update",
+                        _id: req.body._id
+                      });
                     }
                   }
                 }
@@ -154,9 +163,8 @@ module.exports = function(app) {
               //ritorna il nuovo dato, levala, non serve
             } else {
               //res.json(JSON.stringify({ message: "no updated field sent" }));
-              res.send({ error: 'no update field(s) sent', '_id': req.body._id });
+              res.send({ error: "no update field(s) sent", _id: req.body._id });
             }
-          
           })
 
           .delete(function(req, res) {
@@ -164,31 +172,31 @@ module.exports = function(app) {
             var id = req.body._id;
             if (req.body._id == undefined || req.body._id == "") {
               //console.log("no id");
-              res.send({ error: 'missing _id' })
+              res.send({ error: "missing _id" });
               //res.json(JSON.stringify({ message: "_id error" }));
             } else {
-               myAwesomeDB.collection(project)
-                .deleteOne({_id: ObjectId(id)}, function(err, data) {
-                  if (err)  {
-                    
-                    console.log("error could not delete" + req.body._id)
-                    res.send({ error: 'could not delete', '_id': req.body._id })
-                  }//res.json(JSON.stringify({ message: "successfully deleted"}));
+              myAwesomeDB
+                .collection(project)
+                .deleteOne({ _id: ObjectId(id) }, function(err, data) {
+                  if (err) {
+                    console.log("error could not delete" + req.body._id);
+                    res.send({ error: "could not delete", _id: req.body._id });
+                  } 
                   else {
-                    console.log(data.deletedCount);
                     if (data.deletedCount == 1) {
-                       res.send({ result: 'successfully deleted', '_id': req.body._id });
+                      
+                      res.send({
+                        result: "successfully deleted",
+                        _id: req.body._id
+                      });
+                    } else {
+                      res.send({
+                        error: "could not delete",
+                        _id: req.body._id
+                      });
                     }
-                    else {
-                      res.send({ error: 'could not delete', '_id': req.body._id })
-                    }
-                    //res.json(
-                      //JSON.stringify({ message: "successfully deleted"})
-                   // );
                   }
-                  //console.log(res.body)
                 });
-               
             }
           });
 
